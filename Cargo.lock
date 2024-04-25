@@ -601,6 +601,7 @@ dependencies = [
  "actix-web",
  "chrono",
  "dotenv",
+ "lazy_static",
  "reqwest",
  "serde",
  "serde_json",

@@ -8,12 +8,10 @@ pub async fn health_check() -> impl Responder {
 
 pub async fn get_block_number() -> impl Responder {
     let block_number = service::get_block_number().await;
-    println!("{:?}", block_number);
     HttpResponse::Ok().body(format!("{:?}", block_number))
 }
 
 pub async fn get_transactions(req: web::Json<TransactionRequest>) -> impl Responder {
-    println!("Test ");
     let transactions = service::get_transactions(req.into_inner()).await.unwrap();
     HttpResponse::Ok().json(transactions)
 }

@@ -1,4 +1,4 @@
-use crate::config::AppConfig;
+use crate::config::CONFIG;
 use crate::models::TransactionRequest;
 use chrono::{Duration, Utc};
 use reqwest::Error;
@@ -7,8 +7,7 @@ use serde_json::Value;
 pub async fn get_block_number() -> Result<u64, Error> {
     let url = format!(
         "{}?module=proxy&action=eth_blockNumber&apikey={}",
-        AppConfig::init().etherscan_url,
-        AppConfig::init().etherscan_api_key
+        CONFIG.etherscan_url, CONFIG.etherscan_api_key
     );
     let response: Value = reqwest::get(url).await?.json().await?;
     let block_number_hex = response["result"].as_str().unwrap();
@@ -19,11 +18,9 @@ pub async fn get_block_number() -> Result<u64, Error> {
 
 pub async fn get_transactions(req: TransactionRequest) -> Result<Value, Error> {
     let url = format!(
-        "{}?module=account&action=tokentx&contractaddress={}&address={}&startblock=0&endblock=999999999&apikey={}", 
-        AppConfig::init().etherscan_url,
-        AppConfig::init().contract_address,
-        req.address,
-        AppConfig::init().etherscan_api_key);
+        "{}?module=account&action=tokentx&contractaddress={}&address={}&apikey={}",
+        CONFIG.etherscan_url, CONFIG.contract_address, req.address, CONFIG.etherscan_api_key
+    );
     let mut response: Value = reqwest::get(&url).await?.json().await?;
 
     let in_past_timestamp = (Utc::now() - Duration::days(req.years_in_past * 365)).timestamp();

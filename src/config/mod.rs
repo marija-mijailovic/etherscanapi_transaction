@@ -1,6 +1,10 @@
 use dotenv::dotenv;
 use std::env;
 
+lazy_static::lazy_static! {
+    pub static ref CONFIG: AppConfig = AppConfig::init();
+}
+
 pub struct AppConfig {
     pub etherscan_url: String,
     pub etherscan_api_key: String,
